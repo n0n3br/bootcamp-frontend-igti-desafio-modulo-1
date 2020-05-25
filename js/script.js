@@ -14,7 +14,7 @@ const fetchUsers = async () => {
         const json = await response.json();
         users = json.results.map((user) => ({
             firstName: user.name.first,
-            lastName: user.name.lastName || "",
+            lastName: user.name.last || "",
             gender: user.gender,
             age: user.dob.age,
             thumbnail: user.picture.thumbnail,
@@ -29,11 +29,17 @@ const filterUsers = (value) => {
     if (!users) return;
     filteredUsers = !value
         ? []
-        : users.filter((user) =>
-              `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(
-                  value.toLowerCase()
+        : users
+              .filter((user) =>
+                  `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.includes(
+                      value.toLowerCase()
+                  )
               )
-          );
+              .sort((a, b) =>
+                  (a.firstName + a.lastName).localeCompare(
+                      b.firstName + b.lastName
+                  )
+              );
     renderUsers();
     renderStatistics();
 };
